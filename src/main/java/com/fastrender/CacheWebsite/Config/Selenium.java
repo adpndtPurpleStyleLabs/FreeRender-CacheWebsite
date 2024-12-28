@@ -20,16 +20,17 @@ public class Selenium {
     @Bean
 //    @Scope("prototype")
     public WebDriver getWebDriver() throws MalformedURLException {
+        // Selenium Hub URL (in this case, it runs in the same container)
+        String hubUrl = "http://localhost:4444/wd/hub"; // Hub URL
+
+        // ChromeOptions configuration
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless"); // Optional: Run in headless mode
-        options.addArguments("--no-sandbox"); // Recommended for Docker
-        options.addArguments("--disable-dev-shm-usage"); // Recommended for Docker
+        // Add any desired options here
+        options.addArguments("--headless");  // Run Chrome in headless mode (optional)
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
 
-        WebDriver driver = new RemoteWebDriver(new URL(SELENIUM_HUB_URL), options);
-        driver.manage().window().maximize();
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-        return driver;
+        // Initialize RemoteWebDriver with the Hub URL and ChromeOptions
+        return new RemoteWebDriver(new URL(hubUrl), options);
     }
 }
