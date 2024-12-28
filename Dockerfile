@@ -29,5 +29,21 @@ COPY target/cachewebsite.jar /app/app.jar
 # Expose Selenium Hub port (4444) and Spring Boot port (8080)
 EXPOSE 4444 8080
 
-# Start Selenium Hub and Spring Boot Application
-CMD ["sh", "-c", "java -jar /app/selenium-server.jar hub & java -jar /app/app.jar"]
+# Add a script to start Selenium Hub and Spring Boot application after Selenium is ready
+RUN echo '#!/bin/bash \n\
+# Start Selenium Hub \n\
+java -jar /app/selenium-server.jar hub & \n\
+# Wait for Selenium Hub to be ready \n\
+while ! curl --silent --fail http://localhost:4444/status; do \n\
+    echo "Waiting for Selenium Hub to start..."; \n\
+    sleep 5; \n\
+done; \n\
+echo "Selenium Hub is ready. Starting Spring Boot application..."; \n\
+# Start Spring Boot Application \n\
+java -jar /app/app.jar' > /app/start.sh
+
+# Make the script executable
+RUN chmod +x /app/start.sh
+
+# Start the Selenium Hub and Spring Boot Application
+CMD ["/app/start.sh"]
