@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted,ubuntu-latest]
     name: Build, package and
     steps:
       - uses: actions/checkout@v1
