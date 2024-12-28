@@ -1,4 +1,4 @@
-# Base image with OpenJDK for Spring Boot
+# Use an OpenJDK base image for Spring Boot
 FROM openjdk:17-jdk-slim
 
 # Set working directory
@@ -15,22 +15,19 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearm
     apt-get update && apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# Fetch the exact version of ChromeDriver based on Google Chrome version
-RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
-    CHROME_DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*}") && \
-    echo "Installing ChromeDriver version: $CHROME_DRIVER_VERSION for Chrome version: $CHROME_VERSION" && \
-    wget -q "https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip" && \
+# Install ChromeDriver
+RUN wget -q https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip && mv chromedriver /usr/local/bin/ && chmod +x /usr/local/bin/chromedriver && \
     rm chromedriver_linux64.zip
 
-# Install Selenium Server
-RUN wget -q https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.14.0/selenium-server-4.14.0.jar -O selenium-server.jar
+# Download Selenium Hub jar (standalone version)
+RUN wget -q https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.14.0/selenium-server-4.14.0.jar -O /app/selenium-server.jar
 
 # Copy Spring Boot application JAR to container
 COPY target/cachewebsite.jar /app/app.jar
 
-# Expose ports for Selenium (4444) and Spring Boot application (8080)
+# Expose Selenium Hub port (4444) and Spring Boot port (8080)
 EXPOSE 4444 8080
 
-# Start Selenium Server and Spring Boot application
-CMD ["sh", "-c", "java -jar selenium-server.jar standalone & java -jar app.jar"]
+# Start Selenium Hub and Spring Boot Application
+CMD ["sh", "-c", "java -jar /app/selenium-server.jar hub & java -jar /app/app.jar"]
