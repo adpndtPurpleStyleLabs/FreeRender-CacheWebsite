@@ -15,10 +15,11 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearm
     apt-get update && apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# Fetch ChromeDriver version compatible with installed Chrome
+# Fetch and install ChromeDriver compatible with installed Chrome
 RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1) && \
     echo "Detected Chrome major version: $CHROME_VERSION" && \
     CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION) && \
+    echo "Installing ChromeDriver version: $CHROME_DRIVER_VERSION" && \
     wget -q https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip && mv chromedriver /usr/local/bin/ && chmod +x /usr/local/bin/chromedriver && \
     rm chromedriver_linux64.zip
@@ -26,11 +27,11 @@ RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 
 # Install Selenium Server
 RUN wget -q https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.14.0/selenium-server-4.14.0.jar -O selenium-server.jar
 
-# Copy Spring Boot application JAR
+# Copy Spring Boot application JAR to container
 COPY target/cachewebsite.jar /app/app.jar
 
-# Expose necessary ports
+# Expose ports for Selenium (4444) and Spring Boot application (8080)
 EXPOSE 4444 8080
 
-# Start Selenium Hub and Spring Boot application
+# Start Selenium Server and Spring Boot application
 CMD ["sh", "-c", "java -jar selenium-server.jar standalone & java -jar app.jar"]
