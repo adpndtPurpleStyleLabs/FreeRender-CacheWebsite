@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -15,7 +16,9 @@ import java.time.Duration;
 @Configuration
 public class Selenium {
 //    private static final String SELENIUM_HUB_URL = "http://139.99.9.42:4490/wd/hub";
-    private static final String SELENIUM_HUB_URL = "http://127.0.0.1:4444/wd/hub";
+
+    @Value("${SELENIUM_HUB_URL}")
+    private String SELENIUM_HUB_URL;
 
     @Bean
 //    @Scope("prototype")
