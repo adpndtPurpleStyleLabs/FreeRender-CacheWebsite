@@ -9,17 +9,19 @@ RUN apt-get update && apt-get install -y \
     wget curl gnupg unzip --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome
-# Install a specific version of Google Chrome
-RUN wget -q https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb && \
-    apt-get install -y ./google-chrome-stable_114.0.5735.90-1_amd64.deb && \
-    rm google-chrome-stable_114.0.5735.90-1_amd64.deb
+# Install Google Chrome (latest stable version)
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && apt-get install -y google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install ChromeDriver for version 114
-RUN wget -q https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip && \
+# Fetch the exact version of ChromeDriver based on Google Chrome version
+RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
+    CHROME_DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*}") && \
+    echo "Installing ChromeDriver version: $CHROME_DRIVER_VERSION for Chrome version: $CHROME_VERSION" && \
+    wget -q "https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip" && \
     unzip chromedriver_linux64.zip && mv chromedriver /usr/local/bin/ && chmod +x /usr/local/bin/chromedriver && \
     rm chromedriver_linux64.zip
-
 
 # Install Selenium Server
 RUN wget -q https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.14.0/selenium-server-4.14.0.jar -O selenium-server.jar
