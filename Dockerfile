@@ -4,9 +4,9 @@ FROM openjdk:17-jdk-slim
 # Set working directory
 WORKDIR /app
 
-# Install dependencies: curl, wget, unzip, docker, etc.
+# Install dependencies: curl, wget, unzip, etc.
 RUN apt-get update && apt-get install -y \
-    wget curl gnupg unzip docker.io && \
+    wget curl gnupg unzip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Google Chrome (latest stable version)
@@ -29,5 +29,5 @@ COPY target/cachewebsite.jar /app/app.jar
 # Expose Selenium Hub port (4444) and Spring Boot port (8080)
 EXPOSE 4444 8080
 
-# Start Selenium server and Spring Boot application using Docker-in-Docker
-CMD ["sh", "-c", "docker run -d --name selenium-hub -p 4444:4444 selenium/standalone-chrome:latest && java -jar /app/app.jar"]
+# Start Selenium server and Spring Boot application
+CMD ["sh", "-c", "java -jar /app/selenium-server.jar hub & java -jar /app/app.jar"]
