@@ -1,7 +1,19 @@
 #!/bin/bash
 
-# Start Selenium server in the background
-java -jar /opt/selenium/selenium-server-standalone-3.5.3.jar &
+# Start Selenium Hub in the background
+java -jar /app/selenium-server.jar hub &
+
+# Wait for Selenium Hub to start
+sleep 5
+
+# Start Selenium Node (Chrome) and register it with the Hub
+java -jar /app/selenium-server.jar node \
+  --hub http://localhost:4444 \
+  --detect-drivers true \
+  --register-cycle 0 &
+
+# Wait for the Node to register
+sleep 5
 
 # Start the Spring Boot application
-java -jar /app/app.jar
+#java -jar /app/app.jar

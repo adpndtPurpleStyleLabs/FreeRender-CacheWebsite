@@ -16,7 +16,7 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearm
     rm -rf /var/lib/apt/lists/*
 
 # Install ChromeDriver
-RUN wget -q https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip && \
+RUN wget -q https://chromedriver.storage.googleapis.com/113.0.5672.24/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip && mv chromedriver /usr/local/bin/ && chmod +x /usr/local/bin/chromedriver && \
     rm chromedriver_linux64.zip
 
@@ -27,7 +27,12 @@ RUN wget -q https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.
 COPY target/cachewebsite.jar /app/app.jar
 
 # Expose Selenium Hub port (4444) and Spring Boot port (8080)
-EXPOSE 4444 8080
+EXPOSE 4444 8080 4442 4443
 
 # Start Selenium server and Spring Boot application
-CMD ["sh", "-c", "java -jar /app/selenium-server.jar hub"]
+# Set up entrypoint script to start Selenium Hub, Node, and Spring Boot app
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Default command
+CMD ["/app/start.sh"]
