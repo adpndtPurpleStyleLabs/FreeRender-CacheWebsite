@@ -24,7 +24,7 @@ public class Selenium {
 //    @Scope("prototype")
     public WebDriver getWebDriver() throws MalformedURLException {
         // Selenium Hub URL (in this case, it runs in the same container)
-        String hubUrl = "http://localhost:4444/wd/hub"; // Hub URL
+//        String hubUrl = "http://localhost:4444/wd/hub"; // Hub URL
 
         // ChromeOptions configuration
         ChromeOptions options = new ChromeOptions();
@@ -34,6 +34,6 @@ public class Selenium {
         options.addArguments("--disable-dev-shm-usage");
 
         // Initialize RemoteWebDriver with the Hub URL and ChromeOptions
-        return new RemoteWebDriver(new URL(hubUrl), options);
+        return new RemoteWebDriver(new URL(SELENIUM_HUB_URL), options);
     }
 }
