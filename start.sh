@@ -16,4 +16,4 @@ java -jar /app/selenium-server.jar node \
 sleep 5
 
 # Start the Spring Boot application
-#java -jar /app/app.jar
+java -jar /app/app.jar
