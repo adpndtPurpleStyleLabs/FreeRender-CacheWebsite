@@ -17,8 +17,8 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearm
 
 # Install ChromeDriver
 RUN wget -q https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chrome-linux64.zip && \
-    unzip chromedriver_linux64.zip && mv chromedriver /usr/local/bin/ && chmod +x /usr/local/bin/chromedriver && \
-    rm chromedriver_linux64.zip
+    unzip chrome-linux64.zip && mv chrome-linux64 /usr/local/bin/ && chmod +x /usr/local/bin/chrome-linux64 && \
+    rm chrome-linux64.zip
 
 # Download Selenium Server (Standalone) JAR
 RUN wget -q https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.14.0/selenium-server-4.14.0.jar -O /app/selenium-server.jar
