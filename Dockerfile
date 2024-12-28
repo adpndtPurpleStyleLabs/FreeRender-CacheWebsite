@@ -16,7 +16,7 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearm
     rm -rf /var/lib/apt/lists/*
 
 # Install ChromeDriver
-RUN wget -q https://chromedriver.storage.googleapis.com/113.0.5672.24/chromedriver_linux64.zip && \
+RUN wget -q https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.204/linux64/chrome-linux64.zip && \
     unzip chromedriver_linux64.zip && mv chromedriver /usr/local/bin/ && chmod +x /usr/local/bin/chromedriver && \
     rm chromedriver_linux64.zip
 
