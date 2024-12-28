@@ -26,7 +26,7 @@ RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 
 RUN wget -q https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.14.0/selenium-server-4.14.0.jar -O selenium-server.jar
 
 # Copy Spring Boot application JAR
-COPY target/my-springboot-app.jar /app/app.jar
+COPY target/cachewebsite.jar /app/app.jar
 
 # Expose necessary ports
 EXPOSE 4444 8080
