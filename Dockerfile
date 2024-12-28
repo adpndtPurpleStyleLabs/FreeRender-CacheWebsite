@@ -30,4 +30,4 @@ COPY target/cachewebsite.jar /app/app.jar
 EXPOSE 4444 8080
 
 # Start Selenium server and Spring Boot application
-CMD ["sh", "-c", "java -jar /app/selenium-server.jar hub & java -jar"]
+CMD ["sh", "-c", "java -jar /app/selenium-server.jar hub"]
