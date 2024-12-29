@@ -16,17 +16,12 @@ public class CacheWebsiteService {
 
     public void cacheWebsite(String url) {
         long startTime = System.nanoTime(); // Record start time
-
         webDriver.get(url);
         String pageSource = webDriver.getPageSource();
         redisTemplate.opsForValue().set(url, pageSource);
-        webDriver.quit();
         long endTime = System.nanoTime(); // Record end time
-
-        // Calculate the elapsed time
         long durationInNano = endTime - startTime; // Execution time in nanoseconds
         long durationInMillis = durationInNano / 1_000_000; // Convert to milliseconds
-
         System.out.println("Execution time in milliseconds: " + durationInMillis);
     }
 }
